@@ -20,9 +20,21 @@
 		</script>
 		<script>
 			var dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
+			var clicked = false
+			var mouse = [];
+			var click = [];
 			function events() {
-				document.addEventListener("click", function(){
-				    console.log("clicked")
+				document.addEventListener("mousedown", function(e){
+					mouse = [e.pageX, e.pageY];
+				});
+				
+				document.addEventListener("mousedown", function(e){
+					click = [e.pageX, e.pageY];
+					clicked = true;
+				});
+				
+				document.addEventListener("mousedown", function(e){
+					clicked = false;
 				});
 			}
 			function clear() {
@@ -37,7 +49,7 @@
 				canvas.height = dimension[1];
 				events();
 				
-				setInterval(loop, 100);
+				var gameLoop = setInterval(loop, 100);
 			}
 			function loop() {
 				var canvas = document.getElementById("game");
@@ -45,6 +57,10 @@
 				ctx.fillStyle = "lightgray";
 				ctx.fillRect(0,0,dimension[0],dimension[1]);
 				
+				if(clicked == true) {
+					ctx.fillStyle = "red";
+					ctx.fillRect(click[0],click[1],20,20);
+				}
 				clear();
 			}
 		</script>
