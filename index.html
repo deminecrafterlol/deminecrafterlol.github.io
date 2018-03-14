@@ -47,9 +47,9 @@
         			var ctx = canvas.getContext("2d");
 				canvas.width = dimension[0];
 				canvas.height = dimension[1];
-				events();
+				setInterval(loop, 100);
 				
-				var gameLoop = setInterval(loop, 100);
+				events();
 			}
 			function loop() {
 				var canvas = document.getElementById("game");
