@@ -3,20 +3,49 @@
 	  	<style>
 			* {
 				margin: 0;
-				padding: 0;
-			}
-			#game {
-				position: absolute;
-				width: 100%;
-				height: 100%;
 			}
 		</style>
+		<script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
 		<script>
+			// Initialize Firebase
+			var config = {
+				apiKey: "AIzaSyDqEzyD2efs_DOhLZZiOquT4uglQE3h2JA",
+				authDomain: "onlinegame-7c1a9.firebaseapp.com",
+				databaseURL: "https://onlinegame-7c1a9.firebaseio.com",
+				projectId: "onlinegame-7c1a9",
+				storageBucket: "",
+				messagingSenderId: "1049193125210"
+			};
+			firebase.initializeApp(config);
+		</script>
+		<script>
+			var dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
+			function events() {
+				document.addEventListener("click", function(){
+				    console.log("clicked")
+				});
+			}
+			function clear() {
+				var canvas = document.getElementById("game");
+        			var ctx = canvas.getContext("2d");
+				ctx.clearRect(0, 0, dimension[0], dimension[1]);
+			}
       			function load() {
 				var canvas = document.getElementById("game");
         			var ctx = canvas.getContext("2d");
-				ctx.fillStyle = "red";
-				ctx.fillRect(0,0,150,75);
+				canvas.width = dimension[0];
+				canvas.height = dimension[1];
+				events();
+				
+				setInterval(loop, 100);
+			}
+			function loop() {
+				var canvas = document.getElementById("game");
+        			var ctx = canvas.getContext("2d");
+				ctx.fillStyle = "lightgray";
+				ctx.fillRect(0,0,dimension[0],dimension[1]);
+				
+				clear();
 			}
 		</script>
 	</head>
