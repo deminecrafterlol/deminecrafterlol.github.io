@@ -24,7 +24,7 @@
 			var mouse = [];
 			var click = [];
 			function events() {
-				document.addEventListener("mousedown", function(e){
+				document.addEventListener("mousemove", function(e){
 					mouse = [e.pageX, e.pageY];
 				});
 				
@@ -33,7 +33,7 @@
 					clicked = true;
 				});
 				
-				document.addEventListener("mousedown", function(e){
+				document.addEventListener("mouseup", function(){
 					clicked = false;
 				});
 			}
