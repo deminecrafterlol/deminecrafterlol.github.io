@@ -20,6 +20,7 @@
 		</script>
 		<script>
 			var dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
+			var user = Math.floor((Math.random() * 10000) + 1);
 			var clicked = false;
 			var mouse = [];
 			var click = [];
@@ -51,13 +52,35 @@
 				events();
 			}
 			function loop(ctx) {
+				var db = firebase.database();
+				
 				ctx.fillStyle = "lightblue";
 				ctx.fillRect(0,0,dimension[0],dimension[1]);
 				
-				if(clicked == true) {
+				db.ref("/players").once('value').then(function(players) {
+					db.ref("/players/" + user).once('value').then(function(value) {
+						for(i = 0; i < players.length; i++) {
+							if(players[i] == user) {
+								continue;
+							}
+						}
+						if(value.clicked) { 
+							ctx.fillStyle = "gray";
+							ctx.fillRect(value.x,value.y,20,20);
+						}
+					});
+				});
+				
+				if(clicked) {
 					ctx.fillStyle = "gray";
 					ctx.fillRect(mouse[0],mouse[1],20,20);
 				}
+				
+				firebase.database().ref("/players/" + user).set({
+					x: mouse[0],
+					y: mouse[1],
+					clicked: clicked
+				  });
 			}
 		</script>
 	</head>
