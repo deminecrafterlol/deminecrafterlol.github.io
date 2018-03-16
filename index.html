@@ -39,13 +39,14 @@
 			}
 			function clear(ctx) {
 				ctx.clearRect(0, 0, dimension[0], dimension[1]);
+				loop(ctx)
 			}
       			function load() {
 				var canvas = document.getElementById("game");
         			var ctx = canvas.getContext("2d");
 				canvas.width = dimension[0];
 				canvas.height = dimension[1];
-				setInterval(function() { loop(ctx); }, 100);
+				setInterval(function() { clear(ctx); }, 100);
 				
 				events();
 			}
@@ -57,7 +58,6 @@
 					ctx.fillStyle = "gray";
 					ctx.fillRect(click[0],click[1],20,20);
 				}
-				clear(ctx);
 			}
 		</script>
 	</head>
