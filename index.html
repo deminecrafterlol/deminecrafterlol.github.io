@@ -37,9 +37,7 @@
 					clicked = false;
 				});
 			}
-			function clear() {
-				var canvas = document.getElementById("game");
-        			var ctx = canvas.getContext("2d");
+			function clear(ctx) {
 				ctx.clearRect(0, 0, dimension[0], dimension[1]);
 			}
       			function load() {
@@ -47,13 +45,11 @@
         			var ctx = canvas.getContext("2d");
 				canvas.width = dimension[0];
 				canvas.height = dimension[1];
-				setInterval(function() { loop(); }, 100);
+				setInterval(function() { loop(ctx); }, 100);
 				
 				events();
 			}
-			function loop() {
-				var canvas = document.getElementById("game");
-        			var ctx = canvas.getContext("2d");
+			function loop(ctx) {
 				ctx.fillStyle = "lightblue";
 				ctx.fillRect(0,0,dimension[0],dimension[1]);
 				
@@ -61,7 +57,7 @@
 					ctx.fillStyle = "gray";
 					ctx.fillRect(click[0],click[1],20,20);
 				}
-				clear();
+				clear(ctx);
 			}
 		</script>
 	</head>
