@@ -25,6 +25,7 @@
 			var mouse = [];
 			var click = [];
 			function events() {
+				//Mouse
 				document.addEventListener("mousemove", function(e){
 					mouse = [e.pageX, e.pageY];
 				});
@@ -35,6 +36,27 @@
 				});
 				
 				document.addEventListener("mouseup", function(){
+					clicked = false;
+				});
+				
+				//Touch
+				document.addEventListener("touchstart", function(){
+					mouse = [e.pageX, e.pageY];
+					clicked = true;
+				});
+				
+				document.addEventListener("touchstart", function(){
+					mouse = [e.pageX, e.pageY];
+					clicked = true;
+				});
+				
+				document.addEventListener("touchend", function(){
+					mouse = [e.pageX, e.pageY];
+					clicked = false;
+				});
+				
+				document.addEventListener("touchcancel", function(){
+					mouse = [e.pageX, e.pageY];
 					clicked = false;
 				});
 			}
