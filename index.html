@@ -24,7 +24,23 @@
 			var clicked = false;
 			var mouse = [0,0];
 			var click = [0,0];
-			var jemoma;
+			
+			function animLoop( render, element ) {
+				var running, lastFrame = +new Date;
+				function loop( now ) {
+					// stop the loop if render returned false
+					if ( running !== false ) {
+						requestAnimationFrame( loop, element );
+						var deltaT = now - lastFrame;
+						// do not render frame when deltaT is too high
+						if ( deltaT < 160 ) {
+							running = render( deltaT );
+						}
+						lastFrame = now;
+					}
+				}
+				loop( lastFrame );
+			}
 			function events() {
 				//Mouse
 				document.addEventListener("mousemove", function(e){
@@ -61,45 +77,43 @@
 					clicked = false;
 				});
 			}
-			function clear(ctx) {
-				ctx.clearRect(0, 0, dimension[0], dimension[1]);
-				loop(ctx)
-			}
       			function load() {
 				var canvas = document.getElementById("game");
         			var ctx = canvas.getContext("2d");
 				canvas.width = dimension[0];
 				canvas.height = dimension[1];
-				setInterval(function() { clear(ctx); }, 120);
+				setInterval(function() { loop(canvas, ctx); }, 120);
 				
 				events();
 			}
 			function unload() {
 				firebase.database().ref("/players").remove()
 			}
-			function loop(ctx) {
+			function loop(canvas, ctx) {
 				var db = firebase.database();
-				
-				ctx.fillStyle = "lightblue";
-				ctx.fillRect(0,0,dimension[0],dimension[1]);
-				
-				db.ref("/players").once('value').then(function(players) {
-					for(var player in players.val()) {
-						if(player == user)
-							continue;
-						
-						ctx.fillStyle = "gray";
-						ctx.fillRect(players.val()[player].x, players.val()[player].y, 20, 20);
-					}
-				});
-				
-				ctx.fillStyle = "gray";
-				ctx.fillRect(mouse[0], mouse[1], 20, 20);
-				
-				firebase.database().ref("/players/" + user).set({
-					x: mouse[0],
-					y: mouse[1]
-				  });
+				animLoop(function( deltaT ) {
+					ctx.clearRect(0, 0, dimension[0], dimension[1]);
+					ctx.fillStyle = "lightblue";
+					ctx.fillRect(0,0,dimension[0],dimension[1]);
+					
+					db.ref("/players").once('value').then(function(players) {
+						for(var player in players.val()) {
+							if(player == user)
+								continue;
+
+							ctx.fillStyle = "gray";
+							ctx.fillRect(players.val()[player].x, players.val()[player].y, 20, 20);
+						}
+					});
+
+					ctx.fillStyle = "gray";
+					ctx.fillRect(mouse[0], mouse[1], 20, 20);
+
+					firebase.database().ref("/players/" + user).set({
+						x: mouse[0],
+						y: mouse[1]
+					  });
+				}, canvas);
 			}
 		</script>
 	</head>
