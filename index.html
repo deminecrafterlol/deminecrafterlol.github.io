@@ -70,9 +70,12 @@
         			var ctx = canvas.getContext("2d");
 				canvas.width = dimension[0];
 				canvas.height = dimension[1];
-				setInterval(function() { clear(ctx); }, 20);
+				setInterval(function() { clear(ctx); }, 120);
 				
 				events();
+			}
+			function unload() {
+				firebase.database().ref("/players").remove()
 			}
 			function loop(ctx) {
 				var db = firebase.database();
@@ -100,7 +103,7 @@
 			}
 		</script>
 	</head>
-	<body onload="load();">
+	<body onload="load();" onunload="unload();">
 		<canvas id="game"></canvas>
 	</body>
 </html>
