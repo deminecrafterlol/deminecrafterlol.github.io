@@ -81,23 +81,23 @@
 				
 				db.ref("/players").once('value').then(function(players) {
 					db.ref("/players/" + players.val()).once('value').then(function(value) {
-						for(i = 0; i < players.val().length; i++) {
+						for(i = 0; i < players.length; i++) {
 							if(players.val()[i] == user) {
 								continue;
 							}
 						}
 						var jeoma = players;
 						var jeoma = value;
-						if(value.clicked.val()) { 
+						if(value.val().clicked) { 
 							ctx.fillStyle = "gray";
-							ctx.fillRect(value.x.val(),value.y.val(),20,20);
+							ctx.fillRect(value.val().x, value.val().y, 20, 20);
 						}
 					});
 				});
 				
 				if(clicked) {
 					ctx.fillStyle = "gray";
-					ctx.fillRect(mouse[0],mouse[1],20,20);
+					ctx.fillRect(mouse[0], mouse[1], 20, 20);
 				}
 				
 				firebase.database().ref("/players/" + user).set({
