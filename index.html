@@ -81,14 +81,14 @@
 				
 				db.ref("/players").once('value').then(function(players) {
 					db.ref("/players/" + user).once('value').then(function(value) {
-						for(i = 0; i < players.length; i++) {
-							if(players[i] == user) {
+						for(i = 0; i < players.val().length; i++) {
+							if(players.val()[i] == user) {
 								continue;
 							}
 						}
-						if(value.clicked) { 
+						if(value.val().clicked) { 
 							ctx.fillStyle = "gray";
-							ctx.fillRect(value.x,value.y,20,20);
+							ctx.fillRect(value.val().x,value.val().y,20,20);
 						}
 					});
 				});
