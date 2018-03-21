@@ -80,15 +80,17 @@
 				ctx.fillRect(0,0,dimension[0],dimension[1]);
 				
 				db.ref("/players").once('value').then(function(players) {
-					db.ref("/players/" + user).once('value').then(function(value) {
+					db.ref("/players/" + players.val()).once('value').then(function(value) {
 						for(i = 0; i < players.val().length; i++) {
 							if(players.val()[i] == user) {
 								continue;
 							}
 						}
-						if(value.val().clicked) { 
+						var jeoma = players;
+						var jeoma = value;
+						if(value.clicked.val()) { 
 							ctx.fillStyle = "gray";
-							ctx.fillRect(value.val().x,value.val().y,20,20);
+							ctx.fillRect(value.x.val(),value.y.val(),20,20);
 						}
 					});
 				});
