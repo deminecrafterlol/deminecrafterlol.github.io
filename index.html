@@ -24,6 +24,7 @@
 			var clicked = false;
 			var mouse = [];
 			var click = [];
+			var jemoma;
 			function events() {
 				//Mouse
 				document.addEventListener("mousemove", function(e){
@@ -80,14 +81,14 @@
 				ctx.fillRect(0,0,dimension[0],dimension[1]);
 				
 				db.ref("/players").once('value').then(function(players) {
-					var jeoma = players;
+					jeoma = players;
 					//db.ref("/players/" + players.val()).once('value').then(function(value) {
 						//for(i = 0; i < players.length; i++) {
 						//	if(value.val() == user) {
 						//		continue;
 						//	}
 						//}
-						var jeoma2 = value;
+						//var jeoma2 = value;
 						//if(value.val().clicked) { 
 						//	ctx.fillStyle = "gray";
 						//	ctx.fillRect(value.val().x, value.val().y, 20, 20);
