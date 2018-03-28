@@ -96,12 +96,10 @@
 					ctx.fillStyle = "lightblue";
 					ctx.fillRect(0,0,dimension[0],dimension[1]);
 					
-					db.ref("/players").once('value').then(function(players) {
+					db.ref("/players").on('value', function(players) {
 						for(var player in players.val()) {
 							if(player == user)
 								continue;
-							
-							console.log(player + " " + user);
 							
 							ctx.fillStyle = "gray";
 							ctx.fillRect(players.val()[player].x, players.val()[player].y, 20, 20);
