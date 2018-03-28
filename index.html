@@ -100,7 +100,9 @@
 						for(var player in players.val()) {
 							if(player == user)
 								continue;
-
+							
+							console.log(player + " " + user);
+							
 							ctx.fillStyle = "gray";
 							ctx.fillRect(players.val()[player].x, players.val()[player].y, 20, 20);
 						}
