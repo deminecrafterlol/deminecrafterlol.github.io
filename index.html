@@ -106,16 +106,14 @@
 							
 							//PACKETS
 							if(players.val()[player].packet == 0) {
-								if(players.val()[player].packets[0] != players.val()[player].x || players.val()[player].packets[1] != players.val()[player].y) {
-									db.ref("/players/" + player + "").set({
-										x: players.val()[player].packets[0],
-										y: players.val()[player].packets[1]
-									});
+								ctx.fillStyle = "gray";
+								ctx.fillRect(players.val()[player].packets[0], players.val()[player].packets[1], 20, 20);
+							}else if(players.val()[player].packet == 1) {
+								ctx.fillStyle = "red";
+								if(players.val()[player].packets[0]) {
+									ctx.fillRect(players.val()[player].packets[1], players.val()[player].packets[2], 20, 20);
 								}
 							}
-							
-							ctx.fillStyle = "gray";
-							ctx.fillRect(players.val()[player].x, players.val()[player].y, 20, 20);
 						}
 					});
 					
