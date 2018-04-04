@@ -21,9 +21,11 @@
 		<script>
 			var dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
 			var user = Math.floor((Math.random() * 10000) + 1);
+			var db = firebase.database();
 			var clicked = false;
 			var mouse = [0,0];
 			var click = [0,0];
+			var packet = 0;
 			
 			function animLoop( render, element ) {
 				var running, lastFrame = +new Date;
@@ -42,39 +44,41 @@
 				loop( lastFrame );
 			}
 			function events() {
-				//Mouse
 				document.addEventListener("mousemove", function(e){
 					mouse = [e.pageX, e.pageY];
+					packet = 0;
+					db.ref("/players/" + user).set({
+						packet: 0
+					});
+					db.ref("/players/" + user + "/packets").set({
+						0: mouse[0],
+						1: mouse[1]
+					});
 				});
 				
 				document.addEventListener("mousedown", function(e){
-					click = [e.pageX, e.pageY];
 					clicked = true;
+					click = [e.pageX, e.pageY];
+					packet = 1;
+					db.ref("/players/" + user).set({
+						packet: 1
+					});
+					db.ref("/players/" + user + "/packets").set({
+						0: clicked,
+						1: click[0],
+						2: click[1]
+					});
 				});
 				
 				document.addEventListener("mouseup", function(){
 					clicked = false;
-				});
-				
-				//Touch
-				document.addEventListener("touchstart", function(){
-					mouse = [e.pageX, e.pageY];
-					clicked = true;
-				});
-				
-				document.addEventListener("touchstart", function(){
-					mouse = [e.pageX, e.pageY];
-					clicked = true;
-				});
-				
-				document.addEventListener("touchend", function(){
-					mouse = [e.pageX, e.pageY];
-					clicked = false;
-				});
-				
-				document.addEventListener("touchcancel", function(){
-					mouse = [e.pageX, e.pageY];
-					clicked = false;
+					packet = 1;
+					db.ref("/players/" + user).set({
+						packet: 1
+					});
+					db.ref("/players/" + user + "/packets").set({
+						0: clicked
+					});
 				});
 			}
       			function load() {
@@ -87,10 +91,9 @@
 				events();
 			}
 			function unload() {
-				firebase.database().ref("/players").remove()
+				firebase.database().ref("/players/" + user).remove()
 			}
 			function loop(canvas, ctx) {
-				var db = firebase.database();
 				animLoop(function( deltaT ) {
 					ctx.clearRect(0, 0, dimension[0], dimension[1]);
 					ctx.fillStyle = "lightblue";
@@ -101,18 +104,27 @@
 							if(player == user)
 								continue;
 							
+							//PACKETS
+							if(players.val()[player].packet == 0) {
+								if(players.val()[player].packets[0] != players.val()[player].x || players.val()[player].packets[1] != players.val()[player].y) {
+									db.ref("/players/" + player + "").set({
+										x: players.val()[player].packets[0],
+										y: players.val()[player].packets[1]
+									});
+								}
+							}
+							
 							ctx.fillStyle = "gray";
 							ctx.fillRect(players.val()[player].x, players.val()[player].y, 20, 20);
 						}
 					});
-
-					ctx.fillStyle = "gray";
+					
+					if(!clicked) {
+						ctx.fillStyle = "gray";
+					}else{
+						ctx.fillStyle = "red";
+					}
 					ctx.fillRect(mouse[0], mouse[1], 20, 20);
-
-					firebase.database().ref("/players/" + user).set({
-						x: mouse[0],
-						y: mouse[1]
-					  });
 				}, canvas);
 			}
 		</script>
