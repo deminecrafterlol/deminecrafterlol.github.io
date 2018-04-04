@@ -112,6 +112,9 @@
 								ctx.fillStyle = "red";
 								if(players.val()[player].packets[0]) {
 									ctx.fillRect(players.val()[player].packets[1], players.val()[player].packets[2], 20, 20);
+								}else{
+									ctx.fillStyle = "gray";
+									ctx.fillRect(players.val()[player].packets[1], players.val()[player].packets[2], 20, 20);
 								}
 							}
 						}
