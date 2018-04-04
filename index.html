@@ -51,8 +51,9 @@
 						packet: 0
 					});
 					db.ref("/players/" + user + "/packets").set({
-						0: mouse[0],
-						1: mouse[1]
+						0: clicked,
+						1: mouse[0],
+						2: mouse[1]
 					});
 				});
 				
@@ -105,12 +106,9 @@
 								continue;
 							
 							//PACKETS
-							if(players.val()[player].packet == 0) {
-								ctx.fillStyle = "gray";
-								ctx.fillRect(players.val()[player].packets[0], players.val()[player].packets[1], 20, 20);
-							}else if(players.val()[player].packet == 1) {
-								ctx.fillStyle = "red";
+							if(players.val()[player].packet >= 0 || players.val()[player].packet <= 1) {
 								if(players.val()[player].packets[0]) {
+									ctx.fillStyle = "red";
 									ctx.fillRect(players.val()[player].packets[1], players.val()[player].packets[2], 20, 20);
 								}else{
 									ctx.fillStyle = "gray";
