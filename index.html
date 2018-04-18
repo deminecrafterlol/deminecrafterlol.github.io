@@ -44,17 +44,45 @@
 				loop( lastFrame );
 			}
 			function events() {
-				document.addEventListener("mousemove", function(e){
-					mouse = [e.pageX, e.pageY];
-					packet = 0;
-					db.ref("/players/" + user).set({
-						packet: 0
-					});
-					db.ref("/players/" + user + "/packets").set({
-						0: clicked,
-						1: mouse[0],
-						2: mouse[1]
-					});
+				db.ref('/settings/').on('value', function(value) {
+					if(!value.val()["useKeyboard"]) {
+						document.addEventListener("mousemove", function(e){
+							mouse = [e.pageX, e.pageY];
+							packet = 0;
+							db.ref("/players/" + user).set({
+								packet: 0
+							});
+							db.ref("/players/" + user + "/packets").set({
+								0: clicked,
+								1: mouse[0],
+								2: mouse[1]
+							});
+						});
+					}else{
+						document.addEventListener("keydown", function(e){
+							var charCode = e.keyCode || e.which;
+							packet = 0;
+							
+							if(charCode == 40 || charCode == 83) { //DOWN
+								mouse[1] -= 10;
+							}else if(charCode == 38 || charCode == 87) { //UP
+								mouse[1] += 10;
+							}else if(charCode == 39 || charCode == 68) { //RIGHT
+								mouse[0] -= 10;
+							}else if(charCode == 37 || charCode == 65) { //LEFT
+								mouse[0] += 10;
+							}
+							
+							db.ref("/players/" + user).set({
+								packet: packet
+							});
+							db.ref("/players/" + user + "/packets").set({
+								0: clicked,
+								1: mouse[0],
+								2: mouse[1]
+							});
+						});
+					}
 				});
 				
 				document.addEventListener("mousedown", function(e){
@@ -62,7 +90,7 @@
 					click = [e.pageX, e.pageY];
 					packet = 1;
 					db.ref("/players/" + user).set({
-						packet: 1
+						packet: packet
 					});
 					db.ref("/players/" + user + "/packets").set({
 						0: clicked,
@@ -75,7 +103,7 @@
 					clicked = false;
 					packet = 1;
 					db.ref("/players/" + user).set({
-						packet: 1
+						packet: packet
 					});
 					db.ref("/players/" + user + "/packets").set({
 						0: clicked
