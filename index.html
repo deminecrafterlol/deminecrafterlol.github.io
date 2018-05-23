@@ -137,10 +137,10 @@
 							if(players.val()[player].packet >= 0 || players.val()[player].packet <= 1) {
 								if(players.val()[player].packets[0]) {
 									ctx.fillStyle = "red";
-									ctx.fillRect(players.val()[player].packets[1], players.val()[player].packets[2], 20, 20);
+									ctx.fillRect(players.val()[player].packets[1], players.val()[player].packets[2], 40, 40);
 								}else{
 									ctx.fillStyle = "gray";
-									ctx.fillRect(players.val()[player].packets[1], players.val()[player].packets[2], 20, 20);
+									ctx.fillRect(players.val()[player].packets[1], players.val()[player].packets[2], 40, 40);
 								}
 							}
 						}
@@ -151,7 +151,7 @@
 					}else{
 						ctx.fillStyle = "red";
 					}
-					ctx.fillRect(mouse[0], mouse[1], 20, 20);
+					ctx.fillRect(mouse[0], mouse[1], 40, 40);
 				}, canvas);
 			}
 		</script>
