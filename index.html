@@ -19,13 +19,19 @@
 			firebase.initializeApp(config);
 		</script>
 		<script>
+			var settings = firebase.database().ref('/settings/').once('value').then(function(snapshot) { return [snapshot.val().grav, snapshot.val().jumpspeed, snapshot.val().walkspeed]; });
 			var dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
 			var user = Math.floor((Math.random() * 10000) + 1);
 			var db = firebase.database();
 			var clicked = false;
-			var mouse = [0,0];
 			var click = [0,0];
 			var packet = 0;
+			
+			var hsp = 0;
+			var vsp = 0;
+			var key_right = 0;
+			var key_left = 0;
+			var move = 0;
 			
 			function animLoop( render, element ) {
 				var running, lastFrame = +new Date;
@@ -43,45 +49,44 @@
 				}
 				loop( lastFrame );
 			}
+			function collision(rect1, rect2) {
+				if (rect1.x < rect2.x + rect2.width && rect1.x + rect1.width > rect2.x && rect1.y < rect2.y + rect2.height && rect1.height + rect1.y > rect2.y) {
+					return true;
+				}else{
+					return false;
+				}
+			}
 			function events() {
-				db.ref('/settings/').on('value', function(value) {
-					if(!value.val()["useKeyboard"]) {
-						document.addEventListener("mousemove", function(e){
-							mouse = [e.pageX, e.pageY];
-							packet = 0;
-							db.ref("/players/" + user).set({
-								packet: 0
-							});
-							db.ref("/players/" + user + "/packets").set({
-								0: clicked,
-								1: mouse[0],
-								2: mouse[1]
-							});
-						});
-					}else{
-						document.addEventListener("keydown", function(e){
-							var charCode = e.keyCode || e.which;
-							packet = 0;
-							
-							if(charCode == 40 || charCode == 83) { //DOWN
-								mouse[1] += 10;
-							}else if(charCode == 38 || charCode == 87) { //UP
-								mouse[1] -= 10;
-							}else if(charCode == 39 || charCode == 68) { //RIGHT
-								mouse[0] += 10;
-							}else if(charCode == 37 || charCode == 65) { //LEFT
-								mouse[0] -= 10;
-							}
-							
-							db.ref("/players/" + user).set({
-								packet: packet
-							});
-							db.ref("/players/" + user + "/packets").set({
-								0: clicked,
-								1: mouse[0],
-								2: mouse[1]
-							});
-						});
+				document.addEventListener("keydown", function(e){
+					var charCode = e.keyCode || e.which;
+					packet = 0;
+
+					if(charCode == 39 || charCode == 68) { //RIGHT
+						key_right = 1;
+					}else if(charCode == 37 || charCode == 65) { //LEFT
+						key_left = -1;
+					}else if(charCode == 32) { //JUMP
+						//
+					}
+
+					db.ref("/players/" + user).set({
+						packet: packet
+					});
+					db.ref("/players/" + user + "/packets").set({
+						0: clicked,
+						1: mouse[0],
+						2: mouse[1]
+					});
+				});
+				document.addEventListener("keyup", function(e){
+					var charCode = e.keyCode || e.which;
+
+					if(charCode == 39 || charCode == 68) { //RIGHT
+						key_right = 0;
+					}else if(charCode == 37 || charCode == 65) { //LEFT
+						key_left = 0;
+					}else if(charCode == 32) { //JUMP
+						//
 					}
 				});
 				
@@ -128,6 +133,10 @@
 					ctx.fillStyle = "lightblue";
 					ctx.fillRect(0,0,dimension[0],dimension[1]);
 					
+					move = key_right + key_left;
+					hsp = move * settings[2];
+					if(vsp < 10) vsp += settings[0];
+					
 					db.ref("/players").on('value', function(players) {
 						for(var player in players.val()) {
 							if(player == user)
@@ -135,22 +144,11 @@
 							
 							//PACKETS
 							if(players.val()[player].packet >= 0 || players.val()[player].packet <= 1) {
-								if(players.val()[player].packets[0]) {
-									ctx.fillStyle = "red";
-									ctx.fillRect(players.val()[player].packets[1], players.val()[player].packets[2], 40, 40);
-								}else{
-									ctx.fillStyle = "gray";
-									ctx.fillRect(players.val()[player].packets[1], players.val()[player].packets[2], 40, 40);
-								}
+								ctx.fillStyle = "gray";
+								ctx.fillRect(players.val()[player].packets[1], players.val()[player].packets[2], 40, 40);
 							}
 						}
 					});
-					
-					if(!clicked) {
-						ctx.fillStyle = "gray";
-					}else{
-						ctx.fillStyle = "red";
-					}
 					ctx.fillRect(mouse[0], mouse[1], 40, 40);
 				}, canvas);
 			}
