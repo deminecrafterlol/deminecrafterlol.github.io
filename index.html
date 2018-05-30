@@ -27,6 +27,7 @@
 			var click = [0,0];
 			var packet = 0;
 			
+			var pos = [0, 0];
 			var hsp = 0;
 			var vsp = 0;
 			var key_right = 0;
@@ -136,6 +137,9 @@
 					move = key_right + key_left;
 					hsp = move * settings[2];
 					if(vsp < 10) vsp += settings[0];
+					if(collision({ x: pos[0], y: pos[1], width: 40, height: 40 }, { x: pos[0], y: pos[1], width: 40, height: 40 })) {
+						console.log("hihi");
+					}
 					
 					db.ref("/players").on('value', function(players) {
 						for(var player in players.val()) {
