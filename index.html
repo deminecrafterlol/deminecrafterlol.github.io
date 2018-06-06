@@ -20,6 +20,13 @@
 		</script>
 		<script>
 			var settings = firebase.database().ref('/settings/').once('value').then(function(snapshot) { return [snapshot.val().grav, snapshot.val().jumpspeed, snapshot.val().walkspeed]; });
+			var levels = firebase.database().ref('/levels/').once('value').then(function(snapshot) {
+				var levels = [];
+				for(var level in snapshot.val()) {
+					levels.push(level);
+				}
+				return levels
+			});
 			var dimension = [document.documentElement.clientWidth, document.documentElement.clientHeight];
 			var user = Math.floor((Math.random() * 10000) + 1);
 			var db = firebase.database();
